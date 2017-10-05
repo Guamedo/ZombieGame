@@ -9,7 +9,7 @@ MainGame::MainGame() :
         _screenWidth(1024),
         _screenHeight(768),
         _gameState(GameState::PLAY),
-        _maxFPS(60.0f),
+        _maxFPS(120.0f),
         _player(nullptr){
 
     _camera.init(_screenWidth,_screenHeight);
@@ -17,8 +17,14 @@ MainGame::MainGame() :
 }
 
 MainGame::~MainGame(){
-    for(int i = 0; i < _levels.size(); i++){
-        delete _levels[i];
+    for(Level* l : _levels){
+        delete l;
+    }
+    for(Human* h : _humans){
+        delete h;
+    }
+    for(Zombie* z : _zombies){
+        delete z;
     }
     SDL_Quit();
 }
@@ -47,14 +53,14 @@ void MainGame::initSystems(){
     initLevels();
 
     _player = new Player();
-    _player->init(10, _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
+    _player->init(4.0f/(_maxFPS/60), _levels[_currentLevel]->getStartPlayerPos(), &_inputManager);
 
     _humans.push_back((Human*)_player);
 
     Zombie* zombie;
     for(auto zombiePos : _levels[_currentLevel]->getStatrtZombiePositions()){
         zombie = new Zombie();
-        zombie->init(getRandomInRange(1, 6), zombiePos);
+        zombie->init(getRandomInRange(1, 3)/(_maxFPS/60), zombiePos);
         _zombies.push_back(zombie);
     }
 }
@@ -82,18 +88,18 @@ void MainGame::gameLoop(){
 
         // Update the humans position
         for(Human* h : _humans){
-            h->update();
+            h->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
         }
 
         // Update the zombies position
         for(Zombie* z : _zombies){
-            z->update(_humans);
+            z->update(_levels[_currentLevel]->getLevelData(), _humans, _zombies);
         }
 
         // Update the camera position to the
-        _camera.setPositon(_player->getPosition());
+        _camera.goToPosition(_player->getPosition());
         _camera.update();
-        
+
         drawGame();
 
         _fps = _fpsLimiter.end();

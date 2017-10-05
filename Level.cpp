@@ -49,14 +49,17 @@ Level::Level(const std::string& fileName) {
                                       Celofan::Color(255, 255, 255, 255));
                     break;
                 case '@':
+                    _levelData[y][x] = '.';
                     _startPlayerPos = glm::ivec2(x * ELEMENT_SIZE, y * ELEMENT_SIZE);
                     break;
                 case 'Z':
+                    _levelData[y][x] = '.';
                     _statrtZombiePositions.emplace_back(x * ELEMENT_SIZE, y * ELEMENT_SIZE);
                     break;
                 case '.':
                     break;
                 default:
+                    _levelData[y][x] = '.';
                     std::printf("Unexpected symbol %c at (%d, %d)", tile, x, y);
                     break;
             }
@@ -72,4 +75,8 @@ Level::~Level() {
 
 void Level::draw() {
     _spriteBatch.renderBatch();
+}
+
+const std::vector<std::string> &Level::getLevelData() const {
+    return _levelData;
 }

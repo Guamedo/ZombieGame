@@ -16,7 +16,9 @@ void Player::init(float speed, glm::vec2 pos, Celofan::InputManager* inputManage
     _color = Celofan::Color(255, 255, 255, 255);
 }
 
-void Player::update() {
+void Player::update(const std::vector<std::string>& levelData,
+                    std::vector<Human*>& humans,
+                    std::vector<Zombie*>& zombies){
     if(_inputManager->isKeyPress(SDLK_w)){
         _position.y +=_speed;
     }else if(_inputManager->isKeyPress(SDLK_s)){
@@ -27,4 +29,5 @@ void Player::update() {
     }else if(_inputManager->isKeyPress(SDLK_d)){
         _position.x += _speed;
     }
+    this->collideWithLevel(levelData);
 }

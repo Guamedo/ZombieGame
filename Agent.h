@@ -6,12 +6,19 @@
 #include <SpriteBatch.h>
 #include <Vertex.h>
 
-const float AGENT_WIDTH = 50;
+const int AGENT_WIDTH = 50;
+
+class Human;
+class Zombie;
 
 class Agent {
 public:
     Agent();
     virtual ~Agent();
+
+    virtual void update(const std::vector<std::string>& levelData, std::vector<Human*>& humans, std::vector<Zombie*>& zombies);
+
+    void collideWithLevel(const std::vector<std::string>& levelData);
 
     void draw(Celofan::SpriteBatch& spriteBatch);
 

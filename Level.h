@@ -19,6 +19,8 @@ public:
 
     const std::vector<glm::ivec2> &getStatrtZombiePositions() const { return _statrtZombiePositions; }
 
+    const std::vector<std::string> &getLevelData() const;
+
 private:
     std::vector<std::string> _levelData;
     int _numHumans;
